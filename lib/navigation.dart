@@ -11,13 +11,13 @@ class Nav extends StatefulWidget {
 class _NavState extends State<Nav> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
-    Farm(),
     Slimes(),
+    Farm(),
     Store(),
   ];
   List<String> _appbarOptions = <String>[
-    'Farm',
     'Slimes',
+    'Farm',
     'Store',
   ];
 
@@ -36,16 +36,20 @@ class _NavState extends State<Nav> {
         ),
         centerTitle: true,
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        children: _widgetOptions,
+        index: _selectedIndex,
+      ),
+      //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_damage),
-            label: 'Farm',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.android),
             label: 'Slimes',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.water_damage),
+            label: 'Farm',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_business),
