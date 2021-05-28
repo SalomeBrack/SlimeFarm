@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:slime_farm/farm.dart';
+import 'package:slime_farm/money.dart';
 import 'package:slime_farm/slimes.dart';
 import 'package:slime_farm/store.dart';
 
@@ -11,9 +12,9 @@ class Nav extends StatefulWidget {
 class _NavState extends State<Nav> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
-    Slimes(),
-    Farm(),
-    Store(),
+    SlimesView(),
+    FarmView(), //Farm(),
+    StoreView(),
   ];
   List<String> _appbarOptions = <String>[
     'Slimes',
@@ -34,7 +35,12 @@ class _NavState extends State<Nav> {
         title: Text(
           _appbarOptions.elementAt(_selectedIndex),
         ),
-        centerTitle: true,
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: MoneyView(),
+          ),
+        ],
       ),
       body: IndexedStack(
         children: _widgetOptions,
@@ -58,6 +64,7 @@ class _NavState extends State<Nav> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTap,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Farm extends StatefulWidget {
-  Farm({Key? key}) : super(key: key);
+class FarmView extends StatefulWidget {
+  FarmView({Key? key}) : super(key: key);
 
   @override
-  _FarmState createState() => _FarmState();
+  _FarmViewState createState() => _FarmViewState();
 }
 
-class _FarmState extends State<Farm> {
+class _FarmViewState extends State<FarmView> {
   int _counter = 0;
 
   void _incrementCounter() {

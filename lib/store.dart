@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Store extends StatelessWidget {
+class StoreView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
