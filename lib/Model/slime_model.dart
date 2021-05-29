@@ -1,5 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
 final String tableSlimes = 'slimes';
 
+@JsonSerializable(explicitToJson: true)
 class Slime {
   final int? id;
   final String? name;

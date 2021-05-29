@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:slime_farm/Database/slimes_database.dart';
 import 'package:slime_farm/Model/slime_model.dart';
+import 'dart:math';
 
 class SlimesPage extends StatefulWidget {
   @override
@@ -8,9 +9,9 @@ class SlimesPage extends StatefulWidget {
 }
 
 class _SlimesPageState extends State<SlimesPage> {
-  List<Slime> list = <Slime>[];
+  late List<Slime> slimes = <Slime>[];
+  bool isLoading = false;
 
-  Random random = Random();
   List<Color> colors = <Color>[
     Colors.lightGreenAccent,
     Colors.lightBlueAccent,
@@ -18,13 +19,35 @@ class _SlimesPageState extends State<SlimesPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    refreshSlimes();
+  }
+
+  @override
+  void dispose() {
+    SlimesDatabase.instance.close();
+    super.dispose();
+  }
+
+  Future refreshSlimes() async {
+    //setState(() => isLoading = true);
+    this.slimes = await SlimesDatabase.instance.readAllSlimes();
+    setState(() => isLoading = false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: list.isEmpty ? Center(child: Text('No Slimes')) : _buildList(),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator(),)
+          : slimes.isEmpty
+          ? Center(child: Text('No Slimes'))
+          : _buildList(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          addItem();
+          addSlime();
         },
       ),
     );
@@ -32,28 +55,29 @@ class _SlimesPageState extends State<SlimesPage> {
 
   Widget _buildList() {
     return ListView.builder(
-        itemCount: list.length,
+        itemCount: slimes.length,
         itemBuilder: (context, index) {
-          return _buildItem(list[index], index);
+          return _buildItem(slimes[index], index);
         }
     );
   }
 
-  Widget _buildItem(Slime item, index) {
+  Widget _buildItem(Slime slime, index) {
     return ListTile(
-      title: Text('${item.hashCode}'),
+      title: Text('${slime.hashCode}'),
       trailing: Icon(
         Icons.android,
-        color: colors[item.colorGeneA],
+        color: colors[slime.colorGeneA],
       ),
     );
   }
 
-  void addItem() {
+  void addSlime() {
+    Random random = Random();
     Slime randomSlime = Slime(colorGeneA: random.nextInt(3), colorGeneB: 0, timestamp: DateTime.now());
 
     setState(() {
-      list.insert(0, randomSlime);
+      slimes.insert(0, randomSlime);
     });
   }
 }

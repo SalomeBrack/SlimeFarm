@@ -1,13 +1,14 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:slime_farm/Model/slime_model.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class NotesDatabase {
-  static final NotesDatabase instance = NotesDatabase._init();
+class SlimesDatabase {
+  static final SlimesDatabase instance = SlimesDatabase._init();
 
   static Database? _database;
 
-  NotesDatabase._init();
+  SlimesDatabase._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -46,7 +47,7 @@ class NotesDatabase {
     return slime.copy(id: id);
   }
 
-  Future<Slime> readNote(int id) async {
+  Future<Slime> readSlime(int id) async {
     final db = await instance.database;
 
     final maps = await db.query(
@@ -63,12 +64,11 @@ class NotesDatabase {
     }
   }
 
-  Future<List<Slime>> readAllNotes() async {
+  Future<List<Slime>> readAllSlimes() async {
     final db = await instance.database;
     final orderBy = '${SlimeFields.timestamp} ASC';
 
     final result = await db.query(tableSlimes, orderBy: orderBy);
-    //final result = await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
     return result.map((json) => Slime.fromJson(json)).toList();
   }
