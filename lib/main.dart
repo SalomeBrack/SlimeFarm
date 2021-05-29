@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:slime_farm/navigation.dart';
+import 'package:slime_farm/Page/navigation_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
       title: 'Slime Farm',
       themeMode: ThemeMode.light,
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
 
-      home: Nav(),
+      home: NavigationPage(),
     );
   }
 }

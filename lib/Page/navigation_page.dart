@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:slime_farm/farm.dart';
-import 'package:slime_farm/money.dart';
-import 'package:slime_farm/slimes.dart';
-import 'package:slime_farm/store.dart';
+import 'package:slime_farm/Page/slimes_page.dart';
+import 'package:slime_farm/Page/breeding_page.dart';
+import 'package:slime_farm/Page/market_page.dart';
 
-class Nav extends StatefulWidget {
+class NavigationPage extends StatefulWidget {
   @override
-  _NavState createState() => _NavState();
+  _NavigationPageState createState() => _NavigationPageState();
 }
 
-class _NavState extends State<Nav> {
+class _NavigationPageState extends State<NavigationPage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = <Widget>[
-    SlimesView(),
-    FarmView(), //Farm(),
-    StoreView(),
+    SlimesPage(),
+    BreedingPage(),
+    MarkedPage(),
   ];
   List<String> _appbarOptions = <String>[
-    'Slimes',
-    'Farm',
-    'Store',
+    'My Slimes',
+    'Breeding',
+    'Market',
   ];
 
   void _onItemTap(int index) {
@@ -38,7 +37,7 @@ class _NavState extends State<Nav> {
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 20),
-            child: MoneyView(),
+            child: Center(child: Text('10 €'),),
           ),
         ],
       ),
@@ -46,7 +45,6 @@ class _NavState extends State<Nav> {
         children: _widgetOptions,
         index: _selectedIndex,
       ),
-      //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -54,12 +52,12 @@ class _NavState extends State<Nav> {
             label: 'Slimes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_damage),
-            label: 'Farm',
+            icon: Icon(Icons.account_tree_rounded),
+            label: 'Breed',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_business),
-            label: 'Store',
+            label: 'Market',
           ),
         ],
         currentIndex: _selectedIndex,

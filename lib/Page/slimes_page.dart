@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:slime_farm/Model/slime_model.dart';
 
-class SlimesView extends StatefulWidget {
+class SlimesPage extends StatefulWidget {
   @override
-  _SlimesViewState createState() => _SlimesViewState();
+  _SlimesPageState createState() => _SlimesPageState();
 }
 
-class _SlimesViewState extends State<SlimesView> with SingleTickerProviderStateMixin {
+class _SlimesPageState extends State<SlimesPage> {
   List<Slime> list = <Slime>[];
 
   Random random = Random();
@@ -31,7 +32,7 @@ class _SlimesViewState extends State<SlimesView> with SingleTickerProviderStateM
 
   Widget _buildList() {
     return ListView.builder(
-      itemCount: list.length,
+        itemCount: list.length,
         itemBuilder: (context, index) {
           return _buildItem(list[index], index);
         }
@@ -56,12 +57,4 @@ class _SlimesViewState extends State<SlimesView> with SingleTickerProviderStateM
       list.insert(0, randomSlime);
     });
   }
-}
-
-class Slime {
-  Color color;
-
-  Slime({
-    required this.color,
-  });
 }
