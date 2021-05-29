@@ -24,7 +24,7 @@ class _SlimesPageState extends State<SlimesPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          addItem(Slime(color: Colors.green));
+          addItem();
         },
       ),
     );
@@ -44,14 +44,13 @@ class _SlimesPageState extends State<SlimesPage> {
       title: Text('${item.hashCode}'),
       trailing: Icon(
         Icons.android,
-        color: item.color,
+        color: colors[item.colorGeneA],
       ),
     );
   }
 
-  void addItem(Slime item) {
-    int index = random.nextInt(3);
-    Slime randomSlime = Slime(color: colors[index]);
+  void addItem() {
+    Slime randomSlime = Slime(colorGeneA: random.nextInt(3), colorGeneB: 0, timestamp: DateTime.now());
 
     setState(() {
       list.insert(0, randomSlime);
