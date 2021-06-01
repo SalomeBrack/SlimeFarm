@@ -1,7 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:slime_farm/Model/slime_model.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 class SlimesDatabase {
   static final SlimesDatabase instance = SlimesDatabase._init();
@@ -34,9 +33,9 @@ class SlimesDatabase {
       ${SlimeFields.id} $idType,
       ${SlimeFields.name} $textType,
       ${SlimeFields.isFavourite} $boolType,
-      ${SlimeFields.timestamp} $textType
+      ${SlimeFields.timestamp} $textType,
       ${SlimeFields.colorGeneA} $integerType,
-      ${SlimeFields.colorGeneB} $integerType,
+      ${SlimeFields.colorGeneB} $integerType
     )''');
   }
 
@@ -66,7 +65,7 @@ class SlimesDatabase {
 
   Future<List<Slime>> readAllSlimes() async {
     final db = await instance.database;
-    final orderBy = '${SlimeFields.timestamp} ASC';
+    final orderBy = '${SlimeFields.timestamp} DESC';
 
     final result = await db.query(tableSlimes, orderBy: orderBy);
 

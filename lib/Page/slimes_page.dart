@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:slime_farm/Database/slimes_database.dart';
 import 'package:slime_farm/Model/slime_model.dart';
+import 'package:slime_farm/Widget/slime_card.dart';
 import 'dart:math';
 
 class SlimesPage extends StatefulWidget {
@@ -9,14 +10,9 @@ class SlimesPage extends StatefulWidget {
 }
 
 class _SlimesPageState extends State<SlimesPage> {
-  late List<Slime> slimes = <Slime>[];
+  double _gridSpacing = 10;
+  late List<Slime> slimes;
   bool isLoading = false;
-
-  List<Color> colors = <Color>[
-    Colors.lightGreenAccent,
-    Colors.lightBlueAccent,
-    Colors.pinkAccent,
-  ];
 
   @override
   void initState() {
@@ -31,7 +27,7 @@ class _SlimesPageState extends State<SlimesPage> {
   }
 
   Future refreshSlimes() async {
-    //setState(() => isLoading = true);
+    setState(() => isLoading = true);
     this.slimes = await SlimesDatabase.instance.readAllSlimes();
     setState(() => isLoading = false);
   }
@@ -40,44 +36,38 @@ class _SlimesPageState extends State<SlimesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? Center(child: CircularProgressIndicator(),)
+          ? Center(child: CircularProgressIndicator())
           : slimes.isEmpty
           ? Center(child: Text('No Slimes'))
-          : _buildList(),
+          : GridView.extent(
+              maxCrossAxisExtent: 200,
+              mainAxisSpacing: _gridSpacing,
+              crossAxisSpacing: _gridSpacing,
+              padding: EdgeInsets.all(_gridSpacing),
+
+              children: List.generate(slimes.length, (index) => Stack(
+                children: [SlimeCard(slime: slimes[index])],
+              )),
+          ),
+
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {
-          addSlime();
-        },
+        onPressed: () { addSlime(); },
       ),
     );
   }
 
-  Widget _buildList() {
-    return ListView.builder(
-        itemCount: slimes.length,
-        itemBuilder: (context, index) {
-          return _buildItem(slimes[index], index);
-        }
-    );
-  }
-
-  Widget _buildItem(Slime slime, index) {
-    return ListTile(
-      title: Text('${slime.hashCode}'),
-      trailing: Icon(
-        Icons.android,
-        color: colors[slime.colorGeneA],
-      ),
-    );
-  }
-
-  void addSlime() {
+  void addSlime() async {
     Random random = Random();
-    Slime randomSlime = Slime(colorGeneA: random.nextInt(3), colorGeneB: 0, timestamp: DateTime.now());
 
-    setState(() {
-      slimes.insert(0, randomSlime);
-    });
+    final slime = Slime(
+        timestamp: DateTime.now(),
+        colorGeneA: random.nextInt(3),
+        colorGeneB: 0
+    );
+
+    await SlimesDatabase.instance.create(slime);
+
+    setState(() { slimes.insert(0, slime); });
   }
 }

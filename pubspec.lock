@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "22.0.0"
+  alarmclock:
+    dependency: "direct main"
+    description:
+      name: alarmclock
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   analyzer:
     dependency: transitive
     description:
@@ -159,7 +166,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.0.0"
+    version: "7.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -337,7 +344,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.0"
+    version: "0.27.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -489,7 +496,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   xdg_directories:
     dependency: transitive
     description:

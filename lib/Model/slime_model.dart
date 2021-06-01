@@ -5,7 +5,7 @@ final String tableSlimes = 'slimes';
 @JsonSerializable(explicitToJson: true)
 class Slime {
   final int? id;
-  final String? name;
+  final String name;
   final bool isFavourite;
   final DateTime timestamp;
   final int colorGeneA;
@@ -13,7 +13,7 @@ class Slime {
 
   const Slime({
     this.id,
-    this.name,
+    this.name = '',
     this.isFavourite = false,
     required this.timestamp,
     required this.colorGeneA,
