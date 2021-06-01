@@ -10,9 +10,9 @@ class SlimesPage extends StatefulWidget {
 }
 
 class _SlimesPageState extends State<SlimesPage> {
-  double _gridSpacing = 10;
   late List<Slime> slimes;
   bool isLoading = false;
+  double _gridSpacing = 10;
 
   @override
   void initState() {
@@ -24,12 +24,6 @@ class _SlimesPageState extends State<SlimesPage> {
   void dispose() {
     SlimesDatabase.instance.close();
     super.dispose();
-  }
-
-  Future refreshSlimes() async {
-    setState(() => isLoading = true);
-    this.slimes = await SlimesDatabase.instance.readAllSlimes();
-    setState(() => isLoading = false);
   }
 
   @override
@@ -52,6 +46,7 @@ class _SlimesPageState extends State<SlimesPage> {
 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        tooltip: 'Buy',
         onPressed: () { addSlime(); },
       ),
     );
@@ -68,6 +63,12 @@ class _SlimesPageState extends State<SlimesPage> {
 
     await SlimesDatabase.instance.create(slime);
 
-    setState(() { slimes.insert(0, slime); });
+    refreshSlimes();
+  }
+
+  Future refreshSlimes() async {
+    setState(() => isLoading = true);
+    this.slimes = await SlimesDatabase.instance.readAllSlimes();
+    setState(() => isLoading = false);
   }
 }
