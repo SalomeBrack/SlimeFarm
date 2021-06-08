@@ -48,7 +48,7 @@ class _SlimeDetailPageState extends State<SlimeDetailPage> {
         children: [
           Icon(
             Icons.android,
-            color: getColor(slime.colorGeneA),
+            color: getColor(slime.colorIndex),
           ),
           SizedBox(height: 8),
           Text(

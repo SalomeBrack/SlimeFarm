@@ -141,7 +141,7 @@ class SlimesPageState extends State<SlimesPage> {
                       child: Icon(Icons.favorite),
                       onPressed: () {
                         if (slimeA != null && slimeB != null) {
-                          breedSlime(slimeA!.colorGeneA, slimeB!.colorGeneA);
+                          breedSlime(slimeA!.colorIndex, slimeB!.colorIndex);
                         }
                       },
                     ),
@@ -181,17 +181,16 @@ class SlimesPageState extends State<SlimesPage> {
 
   void breedSlime(int colorIndexA, int colorIndexB) async {
     Random random = Random();
-    int colorGene;
+    int colorIndex;
     if (random.nextInt(2) == 0) {
-      colorGene = colorIndexA;
+      colorIndex = colorIndexA;
     } else {
-      colorGene = colorIndexB;
+      colorIndex = colorIndexB;
     }
 
     final slime = Slime(
-        timestamp: DateTime.now(),
-        colorGeneA: colorGene,
-        colorGeneB: 0
+      timestamp: DateTime.now(),
+      colorIndex: colorIndex,
     );
 
     await SlimesDatabase.instance.create(slime);
@@ -204,8 +203,7 @@ class SlimesPageState extends State<SlimesPage> {
 
     final slime = Slime(
         timestamp: DateTime.now(),
-        colorGeneA: random.nextInt(3),
-        colorGeneB: 0
+        colorIndex: random.nextInt(3),
     );
 
     await SlimesDatabase.instance.create(slime);

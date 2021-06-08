@@ -27,15 +27,11 @@ class SlimesDatabase {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final integerType = 'INTEGER NOT NULL';
     final textType = 'TEXT NOT NULL';
-    final boolType = 'BOOLEAN NOT NULL';
 
     await db.execute('''CREATE TABLE $tableSlimes ( 
       ${SlimeFields.id} $idType,
-      ${SlimeFields.name} $textType,
-      ${SlimeFields.isFavourite} $boolType,
       ${SlimeFields.timestamp} $textType,
-      ${SlimeFields.colorGeneA} $integerType,
-      ${SlimeFields.colorGeneB} $integerType
+      ${SlimeFields.colorIndex} $integerType
     )''');
   }
 

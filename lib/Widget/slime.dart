@@ -31,9 +31,9 @@ Container cardWidget() {
 Image slimeWidget(Slime slime) {
   return Image(
     image: AssetImage(
-        slime.colorGeneA == 2
+        slime.colorIndex == 2
             ? 'assets/slime_pink.png'
-            : slime.colorGeneA == 1
+            : slime.colorIndex == 1
             ? 'assets/slime_blue.png'
             : 'assets/slime_green.png'
     ),

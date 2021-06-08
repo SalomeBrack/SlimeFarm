@@ -11,7 +11,7 @@ class MarkedPage extends StatefulWidget {
 
 class _MarkedPageState extends State<MarkedPage> {
   var slimes = new List<Slime>.generate(10, (index) =>
-      Slime(timestamp: DateTime.now(), colorGeneA: 0, colorGeneB: 0)
+      Slime(timestamp: DateTime.now(), colorIndex: 0)
   );
 
   double _gridSpacing = 10;
@@ -67,8 +67,7 @@ class _MarkedPageState extends State<MarkedPage> {
     for (int i = 0; i < slimes.length; i++) {
       slimes[i] = Slime(
           timestamp: DateTime.now(),
-          colorGeneA: _random.nextInt(3),
-          colorGeneB: _random.nextInt(3),
+          colorIndex: _random.nextInt(3),
       );
     }
 

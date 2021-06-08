@@ -16,7 +16,7 @@ class SlimeCard extends StatelessWidget {
 
         child: Icon(
           Icons.android,
-          color: getColor(slime.colorGeneA),
+          color: getColor(slime.colorIndex),
         )
     );
   }
