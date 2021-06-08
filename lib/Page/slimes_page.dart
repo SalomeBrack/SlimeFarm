@@ -204,6 +204,10 @@ class SlimesPageState extends State<SlimesPage> {
                     padding: EdgeInsets.only(left: _gridSpacing, right: _gridSpacing),
                     child: ElevatedButton(
                       child: Icon(Icons.favorite),
+                      style: ElevatedButton.styleFrom(
+                          primary: _slimeA == null || _slimeB == null
+                              ? Colors.grey : Colors.purple
+                      ),
                       onPressed: () {
                         if (_slimeA != null && _slimeB != null) {
                           breedSlime(_slimeA!.colorIndex, _slimeB!.colorIndex);
