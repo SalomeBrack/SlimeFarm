@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:slime_farm/Shared/money.dart';
 import 'package:slime_farm/Page/slimes_page.dart';
-import 'package:slime_farm/Page/breeding_page.dart';
 import 'package:slime_farm/Page/market_page.dart';
+import 'package:slime_farm/Shared/navigation.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -9,21 +10,21 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  int _selectedIndex = 0;
+  NavigationNotifier navigation = NavigationNotifier();
+
   List<Widget> _widgetOptions = <Widget>[
     SlimesPage(),
-    BreedingPage(),
     MarkedPage(),
   ];
+
   List<String> _appbarOptions = <String>[
     'My Slimes',
-    'Breeding',
     'Market',
   ];
 
   void _onItemTap(int index) {
     setState(() {
-      _selectedIndex = index;
+      navigation.changePage(index);
     });
   }
 
@@ -32,18 +33,25 @@ class _NavigationPageState extends State<NavigationPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _appbarOptions.elementAt(_selectedIndex),
+          _appbarOptions.elementAt(NavigationNotifier.page.value),
         ),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 20),
-            child: Center(child: Text('10 €'),),
+            child: Center(
+              child: ValueListenableBuilder(
+                valueListenable: MoneyNotifier.balance,
+                builder: (context, value, child) {
+                  return Text('${MoneyNotifier.balance.value}');
+                },
+              ),
+            ),
           ),
         ],
       ),
       body: IndexedStack(
         children: _widgetOptions,
-        index: _selectedIndex,
+        index: NavigationNotifier.page.value,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -52,15 +60,11 @@ class _NavigationPageState extends State<NavigationPage> {
             label: 'Slimes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_tree_rounded),
-            label: 'Breed',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.add_business),
             label: 'Market',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: NavigationNotifier.page.value,
         onTap: _onItemTap,
         type: BottomNavigationBarType.fixed,
       ),

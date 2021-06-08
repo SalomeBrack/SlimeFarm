@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:slime_farm/Shared/money.dart';
 import 'package:slime_farm/Database/slimes_database.dart';
 import 'package:slime_farm/Model/slime_model.dart';
-import 'package:slime_farm/Widget/slime_card.dart';
+import 'package:slime_farm/Shared/navigation.dart';
+import 'package:slime_farm/Widget/slime.dart';
 import 'dart:math';
 
 class SlimesPage extends StatefulWidget {
   @override
-  _SlimesPageState createState() => _SlimesPageState();
+  SlimesPageState createState() => SlimesPageState();
 }
 
-class _SlimesPageState extends State<SlimesPage> {
+class SlimesPageState extends State<SlimesPage> {
+  MoneyNotifier moneyNotifier = MoneyNotifier();
+  NavigationNotifier navigation = NavigationNotifier();
   late List<Slime> slimes;
   bool isLoading = false;
   double _gridSpacing = 10;
+  bool _dragMode = false;
+
+  Slime? slimeA;
+  Slime? slimeB;
 
   @override
   void initState() {
@@ -28,31 +36,170 @@ class _SlimesPageState extends State<SlimesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : slimes.isEmpty
-          ? Center(child: Text('No Slimes'))
-          : GridView.extent(
-              maxCrossAxisExtent: 200,
-              mainAxisSpacing: _gridSpacing,
-              crossAxisSpacing: _gridSpacing,
-              padding: EdgeInsets.all(_gridSpacing),
+    return Column(
+      children: [
+        Container(color: Colors.purple, width: double.infinity),
 
-              children: List.generate(slimes.length, (index) => Stack(
-                children: [SlimeCard(slime: slimes[index])],
-              )),
+        /// Slimes Fenster
+        Expanded(
+          child: Scaffold(
+            body: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : slimes.isEmpty
+                ? Center(child: Text('Buy Slimes'))
+                : Stack(children: [
+
+                  /// Liste mit Slimes und Pfeil
+                  GridView.extent(
+                    maxCrossAxisExtent: 220,
+                    mainAxisSpacing: _gridSpacing,
+                    crossAxisSpacing: _gridSpacing,
+                    padding: EdgeInsets.all(_gridSpacing),
+                    children: List.generate(slimes.length, (index) => _dragMode
+
+                      /// Dragbare Items
+                      ? Draggable<Slime>(
+                        child: slimeCard(slimes[index]),
+                        childWhenDragging: cardWidget(),
+                        feedback: Container(
+                          width: 150,
+                          child: slimeWidget(slimes[index]),
+                        ),
+                        data: slimes[index],
+                      )
+
+                      /// Klickbare Items
+                      : GestureDetector(
+                        child: slimeCard(slimes[index]),
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/slime', arguments: slimes[index].id);
+                        },
+                      ),
+                    ),
+                  ),
+
+                  /// Pfeil zum Drag-Menü öffnen
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: TextButton(
+                      onPressed: () { setState(() { _dragMode = !_dragMode; }); },
+                      child: Icon(_dragMode ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up),
+                    ),
+                  ),
+                ]),
+
+            /// Add Slime Button
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              tooltip: 'Buy Random',
+              onPressed: () {
+                buyRandomSlime();
+              },
+            ),
           ),
+        ),
 
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        tooltip: 'Buy',
-        onPressed: () { addSlime(); },
-      ),
+        /// Breeding Fenster
+        AnimatedContainer(
+          duration: Duration(milliseconds: 600),
+          width: double.infinity,
+          height: _dragMode ? 200 : 0,
+          color: Colors.purple.shade300,
+          curve: Curves.linearToEaseOut,
+          child: Column(
+            children: [
+              Spacer(),
+
+              Row(
+                children: [
+                  Spacer(),
+
+                  /// Slime A
+                  DragTarget<Slime>(
+                    builder: (
+                        BuildContext context,
+                        List<dynamic> accepted,
+                        List<dynamic> rejected,
+                        ) {
+                      return Container(
+                        height: 100,
+                        width: 100,
+                        child:  slimeA == null ? cardWidget() : slimeCard(slimeA!),
+                      );
+                    },
+                    onAccept: (Slime data) {
+                      setState(() {
+                        slimeA = data;
+                      });
+                    },
+                  ),
+
+                  /// Breeting Button
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: ElevatedButton(
+                      child: Icon(Icons.favorite),
+                      onPressed: () {
+                        if (slimeA != null && slimeB != null) {
+                          breedSlime(slimeA!.colorGeneA, slimeB!.colorGeneA);
+                        }
+                      },
+                    ),
+                  ),
+
+                  /// Slime B
+                  DragTarget<Slime>(
+                    builder: (
+                        BuildContext context,
+                        List<dynamic> accepted,
+                        List<dynamic> rejected,
+                        ) {
+                      return Container(
+                        height: 100,
+                        width: 100,
+                        child: slimeB == null ? cardWidget() : slimeCard(slimeB!),
+                      );
+                    },
+                    onAccept: (Slime data) {
+                      setState(() {
+                        slimeB = data;
+                      });
+                    },
+                  ),
+
+                  Spacer(),
+                ],
+              ),
+
+              Spacer(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  void addSlime() async {
+  void breedSlime(int colorIndexA, int colorIndexB) async {
+    Random random = Random();
+    int colorGene;
+    if (random.nextInt(2) == 0) {
+      colorGene = colorIndexA;
+    } else {
+      colorGene = colorIndexB;
+    }
+
+    final slime = Slime(
+        timestamp: DateTime.now(),
+        colorGeneA: colorGene,
+        colorGeneB: 0
+    );
+
+    await SlimesDatabase.instance.create(slime);
+
+    refreshSlimes();
+  }
+
+  void buyRandomSlime() async {
     Random random = Random();
 
     final slime = Slime(
@@ -62,6 +209,8 @@ class _SlimesPageState extends State<SlimesPage> {
     );
 
     await SlimesDatabase.instance.create(slime);
+
+    moneyNotifier.subtractMoney(5);
 
     refreshSlimes();
   }

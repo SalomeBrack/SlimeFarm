@@ -13,7 +13,6 @@ class SlimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         alignment: Alignment.center,
-        color: Colors.orange.shade200,
 
         child: Icon(
           Icons.android,

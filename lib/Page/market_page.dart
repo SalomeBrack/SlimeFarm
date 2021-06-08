@@ -50,9 +50,11 @@ class _MarkedPageState extends State<MarkedPage> {
               value: _sinceLastRefreshed.inMilliseconds / _waitingTime.inMilliseconds,
             ),
         tooltip: 'Refresh',
-        onPressed: () {
+        onPressed: () async {
           if (_sinceLastRefreshed >= _waitingTime) {
             refreshMarket();
+
+
           }
         },
       ),
