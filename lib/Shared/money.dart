@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MoneyNotifier {
-  static ValueNotifier<int> balance = ValueNotifier(0);
+  static ValueNotifier<int> balance = ValueNotifier(40);
 
   void addMoney(int x) {
     balance.value += x;

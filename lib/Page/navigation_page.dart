@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:slime_farm/Shared/money.dart';
 import 'package:slime_farm/Page/slimes_page.dart';
 import 'package:slime_farm/Page/market_page.dart';
-import 'package:slime_farm/Shared/navigation.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -10,7 +9,7 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  NavigationNotifier navigation = NavigationNotifier();
+  int _selectedIndex = 0;
 
   List<Widget> _widgetOptions = <Widget>[
     SlimesPage(),
@@ -24,7 +23,7 @@ class _NavigationPageState extends State<NavigationPage> {
 
   void _onItemTap(int index) {
     setState(() {
-      navigation.changePage(index);
+      _selectedIndex = index;
     });
   }
 
@@ -33,7 +32,7 @@ class _NavigationPageState extends State<NavigationPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _appbarOptions.elementAt(NavigationNotifier.page.value),
+          _appbarOptions.elementAt(_selectedIndex),
         ),
         actions: <Widget>[
           Padding(
@@ -42,7 +41,10 @@ class _NavigationPageState extends State<NavigationPage> {
               child: ValueListenableBuilder(
                 valueListenable: MoneyNotifier.balance,
                 builder: (context, value, child) {
-                  return Text('${MoneyNotifier.balance.value}');
+                  return Text(
+                    '${MoneyNotifier.balance.value} €',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  );
                 },
               ),
             ),
@@ -51,7 +53,7 @@ class _NavigationPageState extends State<NavigationPage> {
       ),
       body: IndexedStack(
         children: _widgetOptions,
-        index: NavigationNotifier.page.value,
+        index: _selectedIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -64,7 +66,7 @@ class _NavigationPageState extends State<NavigationPage> {
             label: 'Market',
           ),
         ],
-        currentIndex: NavigationNotifier.page.value,
+        currentIndex: _selectedIndex,
         onTap: _onItemTap,
         type: BottomNavigationBarType.fixed,
       ),
